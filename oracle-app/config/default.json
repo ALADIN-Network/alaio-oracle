@@ -1,14 +1,14 @@
 {
   "private_key": "5JQViprJNC4bZ4TjRAcocArDwusxPdVXP3em1oN7VFhZSyXKFJW",
   "ala_data": {
-      "endpoint": "http://3.17.183.19:8888",
-      "oracle_contract_name": "akshitoracle",
+      "endpoint": "http://3.14.68.213:8888",
+      "oracle_contract_name": "oracle",
       "oracle_account": "hansoracle"
   },
   "mongo": {
       "historyDBName": "ALA",
       "applicationDBName": "oracle",
-      "endpoint": "mongodb://3.135.207.53:27017"
+      "endpoint": "mongodb://3.16.135.216:27017"
   }
 }
 

@@ -1,0 +1,216 @@
+{
+    "____comment": "This file was generated with eosio-abigen. DO NOT EDIT Mon Dec 23 12:40:57 2019",
+    "version": "eosio::abi/1.1",
+    "structs": [
+        {
+            "name": "addrequest",
+            "base": "",
+            "fields": [
+                {
+                    "name": "request_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "caller",
+                    "type": "name"
+                },
+                {
+                    "name": "apis",
+                    "type": "api[]"
+                },
+                {
+                    "name": "response_type",
+                    "type": "uint16"
+                },
+                {
+                    "name": "aggregation_type",
+                    "type": "uint16"
+                }
+            ]
+        },
+        {
+            "name": "api",
+            "base": "",
+            "fields": [
+                {
+                    "name": "endpoint",
+                    "type": "string"
+                },
+                {
+                    "name": "json_field",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "oracle_info",
+            "base": "",
+            "fields": [
+                {
+                    "name": "producer",
+                    "type": "name"
+                },
+                {
+                    "name": "oracle_account",
+                    "type": "name"
+                },
+                {
+                    "name": "pending_requests",
+                    "type": "uint32"
+                },
+                {
+                    "name": "successful_requests",
+                    "type": "uint32"
+                },
+                {
+                    "name": "failed_requests",
+                    "type": "uint32"
+                },
+                {
+                    "name": "last_claim_time",
+                    "type": "time_point"
+                },
+                {
+                    "name": "last_reward_share_update",
+                    "type": "time_point"
+                },
+                {
+                    "name": "reward_share",
+                    "type": "float64"
+                },
+                {
+                    "name": "pending_punishment",
+                    "type": "int64"
+                }
+            ]
+        },
+        {
+            "name": "oracle_reward_info",
+            "base": "",
+            "fields": [
+                {
+                    "name": "total_reward_share",
+                    "type": "float64"
+                },
+                {
+                    "name": "total_reward_share_change_rate",
+                    "type": "float64"
+                },
+                {
+                    "name": "last_total_reward_share_change_rate_update",
+                    "type": "time_point"
+                }
+            ]
+        },
+        {
+            "name": "reply",
+            "base": "",
+            "fields": [
+                {
+                    "name": "caller",
+                    "type": "name"
+                },
+                {
+                    "name": "request_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "response",
+                    "type": "bytes"
+                }
+            ]
+        },
+        {
+            "name": "request_info",
+            "base": "",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "time",
+                    "type": "time_point"
+                },
+                {
+                    "name": "assigned_oracle",
+                    "type": "name"
+                },
+                {
+                    "name": "standby_oracle",
+                    "type": "name"
+                },
+                {
+                    "name": "apis",
+                    "type": "api[]"
+                },
+                {
+                    "name": "response_type",
+                    "type": "uint16"
+                },
+                {
+                    "name": "aggregation_type",
+                    "type": "uint16"
+                }
+            ]
+        },
+        {
+            "name": "setoracle",
+            "base": "",
+            "fields": [
+                {
+                    "name": "producer",
+                    "type": "name"
+                },
+                {
+                    "name": "oracle",
+                    "type": "name"
+                }
+            ]
+        }
+    ],
+    "types": [],
+    "actions": [
+        {
+            "name": "addrequest",
+            "type": "addrequest",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "reply",
+            "type": "reply",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setoracle",
+            "type": "setoracle",
+            "ricardian_contract": ""
+        }
+    ],
+    "tables": [
+        {
+            "name": "oraclereward",
+            "type": "oracle_reward_info",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "oracles",
+            "type": "oracle_info",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "requests",
+            "type": "request_info",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        }
+    ],
+    "ricardian_clauses": [],
+    "variants": [],
+    "abi_extensions": []
+}
