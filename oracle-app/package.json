@@ -12,7 +12,7 @@
   "dependencies": {
     "config": "^3.2.4",
     "demux": "^4.0.0",
-    "demux-ala": "^4.0.1",
+    "demux-ala": "^4.0.2",
     "alaiojs": "^20.0.2",
     "moment": "^2.24.0",
     "mongoose": "^5.7.13",
