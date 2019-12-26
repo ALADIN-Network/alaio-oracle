@@ -1,12 +1,12 @@
 {
   "private_key": "5JQViprJNC4bZ4TjRAcocArDwusxPdVXP3em1oN7VFhZSyXKFJW",
-  "eos_data": {
+  "ala_data": {
       "endpoint": "http://3.17.183.19:8888",
       "oracle_contract_name": "akshitoracle",
       "oracle_account": "hansoracle"
   },
   "mongo": {
-      "historyDBName": "EOS",
+      "historyDBName": "ALA",
       "applicationDBName": "oracle",
       "endpoint": "mongodb://3.135.207.53:27017"
   }
