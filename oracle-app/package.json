@@ -1,0 +1,22 @@
+{
+  "name": "oracle-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "config": "^3.2.4",
+    "demux": "^4.0.0",
+    "demux-ala": "^4.0.1",
+    "alaiojs": "^20.0.2",
+    "moment": "^2.24.0",
+    "mongoose": "^5.7.13",
+    "node-fetch": "^2.6.0",
+    "yargs": "^15.0.2"
+  }
+}

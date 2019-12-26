@@ -1,0 +1,9 @@
+/oracle-app/node_modules
+/oracle-app/config/default.json
+/contracts/oracle/oracle.wasm
+/contracts/oracle/oracle.abi
+/contracts/client/client.wasm
+/contracts/client/client.abi
+
+
+
