@@ -114,6 +114,8 @@ mongoose.connect(config.mongo.endpoint + '/' + config.mongo.applicationDBName,
     console.error(err);
     process.exit(1);
 });
+
+// mongoose.set('debug',true);
 createLastBlockModel(mongoose);
 createRequestResponseModel(mongoose);
 createAuditTrailModel(mongoose);

@@ -12,7 +12,7 @@ class ObjectActionHandler extends AbstractActionHandler {
 		const effects = [
 			{
 				actionType: options.ala_data.oracle_contract_name + '::addrequest',
-				run: async (payload, blockInfo, context) => {
+				run: async (payload, blockInfo, context) => {``
 					console.log("Received addrequest event");
 					// console.log(payload.data);
 					const request_id = payload.data.request_id;
@@ -23,68 +23,68 @@ class ObjectActionHandler extends AbstractActionHandler {
 					// console.log(prefered_api);
 					const string_to_count = "Kazakhstan";
 
-					// const apis = [ 
-					// 	{ parameters: '{}',
-					// 	response_type: 1,
-					// 	json_field: 'USD',
-					// 	request_type: 0,
-					// 	endpoint:
-					// 		'https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD,CAD' },
-					// 		{ parameters: '{}',
-					// 		response_type: 1,
-					// 		json_field: 'USD',
-					// 		request_type: 0,
-					// 		endpoint:
-					// 			'https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD,CAD' },
-					// 	{ parameters: '{}',
-					// 	response_type: 1,
-					// 	json_field: 'USD',
-					// 	request_type: 0,
-					// 	endpoint:
-					// 		'https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD,CAD' },
-					// 		{ parameters: '{}',
-					// 	response_type: 1,
-					// 	json_field: 'USD',
-					// 	request_type: 0,
-					// 	endpoint:
-					// 		'https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD,CAD' }
-					// ]
+					const apis = [ 
+						{ parameters: '{}',
+						response_type: 1,
+						json_field: 'USD',
+						request_type: 0,
+						endpoint:
+							'https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD,CAD' },
+							{ parameters: '{}',
+							response_type: 1,
+							json_field: 'USD',
+							request_type: 0,
+							endpoint:
+								'https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD,CAD' },
+						{ parameters: '{}',
+						response_type: 1,
+						json_field: 'USD',
+						request_type: 0,
+						endpoint:
+							'https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD,CAD' },
+							{ parameters: '{}',
+						response_type: 1,
+						json_field: 'USD',
+						request_type: 0,
+						endpoint:
+							'https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD,CAD' }
+					]
 
-					const apis = [{
-						parameters: '{}',
-						response_type: 1,
-						json_field: 'message',
-						request_type: 0,
-						endpoint:"http://www.mocky.io/v2/5df0a16a3100008d008f0980"
-					},
-					{
-						parameters: '{}',
-						response_type: 1,
-						json_field: 'message',
-						request_type: 0,
-						endpoint:"http://www.mocky.io/v2/5df0a16a3100008d008f0980"
-					},
-					{
-						parameters: '{}',
-						response_type: 1,
-						json_field: 'message',
-						request_type: 0,
-						endpoint:"http://www.mocky.io/v2/5df0bcd531000053008f0a55"
-					},
-					{
-						parameters: '{}',
-						response_type: 1,
-						json_field: 'message',
-						request_type: 0,
-						endpoint:"http://www.mocky.io/v2/5df0bcd531000053008f0a55"
-					},
-					{
-						parameters: '{}',
-						response_type: 1,
-						json_field: 'message',
-						request_type: 0,
-						endpoint:"http://www.mocky.io/v2/5df0bcd531000053008f0a55"
-					}]
+					// const apis = [{
+					// 	parameters: '{}',
+					// 	response_type: 1,
+					// 	json_field: 'message',
+					// 	request_type: 0,
+					// 	endpoint:"http://www.mocky.io/v2/5df0a16a3100008d008f0980"
+					// },
+					// {
+					// 	parameters: '{}',
+					// 	response_type: 1,
+					// 	json_field: 'message',
+					// 	request_type: 0,
+					// 	endpoint:"http://www.mocky.io/v2/5df0a16a3100008d008f0980"
+					// },
+					// {
+					// 	parameters: '{}',
+					// 	response_type: 1,
+					// 	json_field: 'message',
+					// 	request_type: 0,
+					// 	endpoint:"http://www.mocky.io/v2/5df0bcd531000053008f0a55"
+					// },
+					// {
+					// 	parameters: '{}',
+					// 	response_type: 1,
+					// 	json_field: 'message',
+					// 	request_type: 0,
+					// 	endpoint:"http://www.mocky.io/v2/5df0bcd531000053008f0a55"
+					// },
+					// {
+					// 	parameters: '{}',
+					// 	response_type: 1,
+					// 	json_field: 'message',
+					// 	request_type: 0,
+					// 	endpoint:"http://www.mocky.io/v2/5df0bcd531000053008f0a55"
+					// }]
 
 
 					// const apis = [{ 	
@@ -129,7 +129,7 @@ class ObjectActionHandler extends AbstractActionHandler {
 					// const response_type = payload.data.response_type;					
 					// const aggregation_type = payload.data.aggregation_type;
 					const aggregation_type = 6 // 0,1,3,4,5,8
-					const response_type =  3; //1,2
+					const response_type =  2; //1,2
 
 					// const response_type =  0; //0
 					// const aggregation_type = 2 // 2, 6,7 ,9
@@ -148,9 +148,7 @@ class ObjectActionHandler extends AbstractActionHandler {
 						}
 						const record = rpc_response.rows[0];
 						
-						context.mongo.model('audit_trail').update({request_id: request_id}, {$set: {oracle_account: rpc_response.rows[0].assigned_oracle}}).catch(error => {
-							console.error('Failed to insert response to mongo2: ', error);
-						});
+					
 						// if (options.ala_data.oracle_account != record.assigned_oracle) {
 						// 	console.log('Skip request to other oracle');
 						assigned_oracle = record.assigned_oracle;
@@ -178,16 +176,15 @@ class ObjectActionHandler extends AbstractActionHandler {
 					console.log("inside objectActionHandler response_type", response_type)
 					console.log("inside objectActionHandler prefered_api", prefered_api)
 
-					
-
+				
 					if (options.ala_data.oracle_account != assigned_oracle && options.ala_data.oracle_account != standby_oracle) {
 						console.log('Skip request assigned to other oracle');
 						return;
 					}
-					const result = await context.requestProcessor.processRequest(request_id, caller, apis, response_type, aggregation_type,context, prefered_api, string_to_count);
+					const result = await context.requestProcessor.processRequest(request_id, caller, apis, response_type, aggregation_type,context, prefered_api, string_to_count, options, assigned_oracle, standby_oracle);
 					if (options.ala_data.oracle_account == assigned_oracle) {
 						context.contractInteraction.reply(caller, request_id, result).catch(error => {
-							console.error('Failed to send `reply` action');
+							console.error('Failed to send `reply` action', error);
 							context.mongo.model('request_response').create({
 								caller: caller,
 								id: request_id,

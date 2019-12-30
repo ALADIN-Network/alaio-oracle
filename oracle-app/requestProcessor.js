@@ -94,74 +94,80 @@ class RequestProcessor {
      * or error was encountered during request processing api will be considered as failed
      */
 
-	async audit_trail (id, caller, api, response_type, aggregation_type, result, aggregated_response, context){
+	async audit_trail (id, caller, api, response_type, aggregation_type, result, aggregated_response, context,  options, assigned_oracle, standby_oracle){
 
 		// console.log("moment().format('YYYY-MM-DD hh:mm:ss')",moment().format('YYYY-MM-DD hh:mm:ss'))
-		var data = {
-			caller: caller, 
-			request_id: id, 
-			time: moment().format('YYYY-MM-DD hh:mm:ss'),
-			api_set : {
+		console.log("request processor, inside audit_trail  :", options.ala_data.oracle_account)
+		console.log("request processor, inside audit_trail  :", assigned_oracle)
+		console.log("request processor, inside audit_trail  :", (options.ala_data.oracle_contract_name == assigned_oracle))
+
+		if (options.ala_data.oracle_account == assigned_oracle){
+			var data = {
+				caller: caller, 
+				request_id: id, 
+				time: moment().format('YYYY-MM-DD hh:mm:ss'),
+				api_set : {
+					api : api.endpoint,
+					request_type : api.request_type,
+					json_field : api.json_field,							
+					parameter : api.parameter,
+					response : result
+				},
+				response_type : response_type,
+				aggregation_type : aggregation_type,
+				oracle_account : assigned_oracle, 
+				standby_oracle_account: standby_oracle,
+				aggregated_response: aggregated_response
+			}
+			// console.log("datadatdatadtadta",data)
+			var update_api_set = {
 				api : api.endpoint,
 				request_type : api.request_type,
 				json_field : api.json_field,							
 				parameter : api.parameter,
 				response : result
-			},
-			response_type : response_type,
-			aggregation_type : aggregation_type,
-			oracle_account : "", 
-			aggregated_response: aggregated_response
-		}
-		// console.log("datadatdatadtadta",data)
-		var update_api_set = {
-			api : api.endpoint,
-			request_type : api.request_type,
-			json_field : api.json_field,							
-			parameter : api.parameter,
-			response : result
-		}
-	
-	
-		context.mongo.model('audit_trail').findOne({request_id: id}).then(function (userDataa) {
-			// console.log("userDatauserData", userDataa)
-			// console.log("userDatauserData", userDataa == null)
-	
-			if(userDataa == null){
-				// console.log("inside if audit_trail......")
-				// console.log("data is insane", data)
-				context.mongo.model('audit_trail').create({ 
-					caller: caller, 
-					request_id: id, 
-					time: moment().format('YYYY-MM-DD hh:mm:ss'),
-					api_set : {
-						api : api.endpoint,
-						request_type : api.request_type,
-						json_field : api.json_field,							
-						parameter : api.parameter,
-						response : result
-					},
-					response_type : response_type,
-					aggregation_type : aggregation_type,
-					oracle_account : "", 
-					aggregated_response: aggregated_response
-				
-				}).catch(error => {
-					console.error('Failed to insert response to mongo3: ', error);
-				});
 			}
-			else{
-				// console.log("inside else audit_trail......")
-				context.mongo.model('audit_trail').update({request_id: id}, {$push: {api_set: update_api_set}}).catch(error => {
-					console.error('Failed to insert response to mongo2: ', error);
-				});
-			}
-		})
-	
-		// return true
+		
+		
+			context.mongo.model('audit_trail').findOne({request_id: id}).then(function (userDataa) {
+				// console.log("userDatauserData", userDataa)
+				console.log("request processor, inside audit_trail  checking if model is created:",  userDataa == null)
+
+				if(userDataa == null){
+					// console.log("inside if audit_trail......")
+					// console.log("data is insane", data)
+					context.mongo.model('audit_trail').create({ 
+						caller: caller, 
+						request_id: id, 
+						time: moment().format('YYYY-MM-DD hh:mm:ss'),
+						api_set : {
+							api : api.endpoint,
+							request_type : api.request_type,
+							json_field : api.json_field,							
+							parameter : api.parameter,
+							response : result
+						},
+						response_type : response_type,
+						aggregation_type : aggregation_type,
+						oracle_account : assigned_oracle, 
+						standby_oracle_account : standby_oracle,
+						aggregated_response: aggregated_response
+					
+					}).catch(error => {
+						console.error('Failed to insert response to mongo3: ', error);
+					});
+				}
+				else{
+					// console.log("inside else audit_trail......")
+					context.mongo.model('audit_trail').update({request_id: id}, {$push: {api_set: update_api_set}}).catch(error => {
+						console.error('Failed to insert response to mongo2: ', error);
+					});
+				}
+			})
+		}
 		
 	}
-	async processRequest(id, caller, apis, response_type, aggregation_type, context, prefered_api, string_to_count) {
+	async processRequest(id, caller, apis, response_type, aggregation_type, context, prefered_api, string_to_count, options, assigned_oracle) {
 
 		
 		var results = [];
@@ -172,7 +178,7 @@ class RequestProcessor {
 				try {
 					result = await this.getResult(api, api.endpoint, api.json_field, response_type);
 					console.log("request processor, inside processReq result :", result)
-					var responsee = await this.audit_trail(id, caller, api, response_type, aggregation_type, result, "", context );
+					var responsee = await this.audit_trail(id, caller, api, response_type, aggregation_type, result, "", context,  options, assigned_oracle );
 					if (result !== null) {
 						// console.log("before pushing into results, result : ",result);
 						results.push(result);
@@ -233,11 +239,12 @@ class RequestProcessor {
 		// console.log("result: ",result);
 		//result = aggregate (results, aggregation_type)
 
+		if (options.ala_data.oracle_account == assigned_oracle){
 
-		context.mongo.model('audit_trail').update({request_id: id}, {$set: {aggregated_response: result}}).then(function (userDataa) {
-			console.error('Failed to insert response to mongo aggregated_response: ', userDataa);
-		});
-
+			context.mongo.model('audit_trail').update({request_id: id}, {$set: {aggregated_response: result}}).then(function (userDataa) {
+				console.error('Added aggregation response to audit trail', userDataa);
+			});
+		}
 		var encoded = "";
 		try {
 			console.log("request processor, inside processReq before encodeing aggregation  :", result)
