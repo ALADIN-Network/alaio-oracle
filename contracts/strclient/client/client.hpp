@@ -59,7 +59,7 @@ namespace alaio {
        */
       struct [[alaio::table]] btc_balances {
          uint64_t id;
-         asset amount;
+         std::string amount;
 
          uint64_t primary_key() const { return id; }
       };

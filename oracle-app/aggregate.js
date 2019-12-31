@@ -1,3 +1,4 @@
+var stats = require("stats-lite")
 
 function aggregate(data, aggregation_type, string_to_count) {
     console.log("data in aggregation", data)
@@ -33,9 +34,10 @@ function aggregate(data, aggregation_type, string_to_count) {
         console.log("sum ", sum, "len ", len)
         var mean = sum/len;
         console.log("mean", mean)
-        variance = sum_of_squares/len;
+        // variance = sum_of_squares/len;
+        variance = stats.variance(data)
         console.log("variance", variance)
-        var sd = Math.sqrt(variance)
+        var sd = stats.stdev(data)
         console.log("sd", sd)
         console.log("normal values are between :", mean+sd, "and ",mean-sd)
         for (i = 0; i<len; i++) {
@@ -121,19 +123,21 @@ function aggregate(data, aggregation_type, string_to_count) {
         return data[len-1];
     }
     else if (aggregation_type == 8 ){
-        console.log("handata ",data);
-        if(len%2===0)
-        {
-            var median = ((data[len/2])+(data[(len/2)-1]))/2;
-            console.log("median: ",median);
-            return median;
-        }
-        else
-        {
-            var median = data[(len-1)/2];
-            console.log("median: ",median);
-            return median;
-        }
+        // console.log("handata ",data);
+
+        return stats.median(data);
+        // if(len%2===0)
+        // {
+        //     var median = ((data[len/2])+(data[(len/2)-1]))/2;
+        //     console.log("median: ",median);
+        //     return median;
+        // }
+        // else
+        // {
+        //     var median = data[(len-1)/2];
+        //     console.log("median: ",median);
+        //     return median;
+        // }
     }
     else if (aggregation_type == 9 ){
         console.log("handata ",data);

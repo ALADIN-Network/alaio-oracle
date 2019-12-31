@@ -45,15 +45,15 @@ namespace alaio {
 
       //request_id += microseconds(current_time()).count();
 
-      const auto rate = unpack<double>(response);
-      asset btc( static_cast<uint64_t>( deposit_it->transferred.amount * rate ), btc_balance_symbol );
+      const auto rate = unpack<std::string>(response);
+      //asset btc( static_cast<uint64_t>( deposit_it->transferred.amount * rate ), btc_balance_symbol );
 
       btc_balances_table balances( get_self(), get_self().value );
       //auto balance_it = balances.find( btc_balance_symbol.code().raw() );
       //if (balance_it == balances.end()) {
          balances.emplace( get_self(), [&]( auto& bal ) {
             bal.id = request_id;
-            bal.amount = btc;
+            bal.amount = rate;
          });
       //}
       // else {
@@ -83,19 +83,10 @@ namespace alaio {
       //    _free_ids.erase(free_id_it);
       // }
       //else {
+      uint64_t  request_id = _config.next_request_id;
+      request_id += microseconds(current_time()).count();
 
-
-      //uint64_t  request_id = _config.next_request_id;
-      
-      uint64_t a = microseconds(current_time()).count();
-      print(" ########################### aaaaaaaaaaaaaaaaaaaaaaaaaaa: ",a);
-      uint64_t request_id = a;
-      print(" ########################### request_id: ",request_id);
-
-      
-      //_config.next_request_id++;
-      
-      
+         _config.next_request_id++;
       //}
 
       make_request(request_id, std::vector<api>{ {.endpoint="https://min-api.cryptocompare.com/data/price?fsym=ALA&tsyms=BTC", .json_field="BTC"} }, 2, 0, 0, "qwerty");

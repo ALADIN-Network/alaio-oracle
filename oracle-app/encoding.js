@@ -23,7 +23,10 @@ function encodeDouble(value) {
 }
 
 function encodeString(value) {
-	value = value.toString
+	value = value.toString()
+	console.log("inside encodeString value", value)
+	console.log("inside encodeString typeof value", typeof value)
+
 	var buf = Buffer.allocUnsafe(1);
 	buf.writeUInt8(value.length);
 	return Buffer.concat([ buf, Buffer.from(value, 'ascii') ]).toString('hex');

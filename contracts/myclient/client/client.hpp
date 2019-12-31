@@ -28,6 +28,7 @@ namespace alaio {
 
       void reply( const alaio::name& caller, uint64_t request_id, const std::vector<char>& response );
 
+      [[alaio::action]]
       void transfer( const name& from, const name& to, const alaio::asset& amount, const std::string& memo );
 
    private:
@@ -59,7 +60,7 @@ namespace alaio {
        */
       struct [[alaio::table]] btc_balances {
          uint64_t id;
-         asset amount;
+         int amount;
 
          uint64_t primary_key() const { return id; }
       };

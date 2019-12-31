@@ -1,5 +1,5 @@
 {
-    "____comment": "This file was generated with alaio-abigen. DO NOT EDIT Tue Dec 31 12:26:02 2019",
+    "____comment": "This file was generated with alaio-abigen. DO NOT EDIT Tue Dec 31 14:37:26 2019",
     "version": "alaio::abi/1.1",
     "structs": [
         {
@@ -12,7 +12,7 @@
                 },
                 {
                     "name": "amount",
-                    "type": "asset"
+                    "type": "int32"
                 }
             ]
         },
@@ -43,10 +43,38 @@
                     "type": "asset"
                 }
             ]
+        },
+        {
+            "name": "transfer",
+            "base": "",
+            "fields": [
+                {
+                    "name": "from",
+                    "type": "name"
+                },
+                {
+                    "name": "to",
+                    "type": "name"
+                },
+                {
+                    "name": "amount",
+                    "type": "asset"
+                },
+                {
+                    "name": "memo",
+                    "type": "string"
+                }
+            ]
         }
     ],
     "types": [],
-    "actions": [],
+    "actions": [
+        {
+            "name": "transfer",
+            "type": "transfer",
+            "ricardian_contract": ""
+        }
+    ],
     "tables": [
         {
             "name": "btcbalances",

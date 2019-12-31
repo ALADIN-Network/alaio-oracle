@@ -1,14 +1,14 @@
 {
-  "private_key": "5KBcx7MXkDb6kfj38JoUSR7Hs7Ynsyfvii4ET7tLCkLYrK5kGP5",
+  "private_key": "5KRQVWMvJczm8He9iT64P8VnQcx411M4utX7RJCbVhmCT5upVFR",
   "ala_data": {
-      "endpoint": "http://3.14.68.213:8888",
+      "endpoint": "http://3.17.183.19:8888",
       "oracle_contract_name": "alaio",
       "oracle_account": "alaio"
   },
   "mongo": {
       "historyDBName": "ALA",
       "applicationDBName": "oracle",
-      "endpoint": "mongodb://3.16.135.216:27017"
+      "endpoint": "mongodb://3.135.207.53:27017"
   }
 }
 
