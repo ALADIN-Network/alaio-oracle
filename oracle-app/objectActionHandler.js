@@ -14,48 +14,48 @@ class ObjectActionHandler extends AbstractActionHandler {
 				actionType: options.ala_data.oracle_contract_name + '::addrequest',
 				run: async (payload, blockInfo, context) => {``
 					console.log("Received addrequest event");
-					// console.log(payload.data);
+					console.log("payload.data",payload.data);
 					const request_id = payload.data.request_id;
 					const caller = payload.data.caller;
 					
 					//const apis = payload.data.apis;
-					const prefered_api = "";
+					const prefered_api = payload.data.prefered_api;
 					// console.log(prefered_api);
-					const string_to_count = "";
-
-					const apis = [ 
-						{ parameters: '{}',
-						response_type: 1,
-						json_field: 'USD',
-						request_type: 0,
-						endpoint:
-							'https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD,CAD' },
-							{ parameters: '{}',
-							response_type: 1,
-							json_field: 'USD',
-							request_type: 0,
-							endpoint:
-								'https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD,CAD' },
-								{ parameters: '{}',
-								response_type: 1,
-								json_field: 'message',
-								request_type: 0,
-								endpoint:
-									'http://www.mocky.io/v2/5e0b2cdc330000810020a932' },
-								{ parameters: '{}',
-						response_type: 1,
-						json_field: 'USD',
-						request_type: 0,
-						endpoint:
-							'https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD,CAD' },
-							{ parameters: '{}',
-						response_type: 1,
-						json_field: 'USD',
-						request_type: 0,
-						endpoint:
-							'https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD,CAD' }
+					const string_to_count = payload.data.string_to_count;
+					const apis =  payload.data.apis;
+					// const apis = [ 
+					// 	{ parameters: '{}',
+					// 	response_type: 1,
+					// 	json_field: 'USD',
+					// 	request_type: 0,
+					// 	endpoint:
+					// 		'https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD,CAD' },
+					// 		{ parameters: '{}',
+					// 		response_type: 1,
+					// 		json_field: 'USD',
+					// 		request_type: 0,
+					// 		endpoint:
+					// 			'https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD,CAD' },
+					// 			{ parameters: '{}',
+					// 			response_type: 1,
+					// 			json_field: 'message',
+					// 			request_type: 0,
+					// 			endpoint:
+					// 				'http://www.mocky.io/v2/5e0b2cdc330000810020a932' },
+					// 			{ parameters: '{}',
+					// 	response_type: 1,
+					// 	json_field: 'USD',
+					// 	request_type: 0,
+					// 	endpoint:
+					// 		'https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD,CAD' },
+					// 		{ parameters: '{}',
+					// 	response_type: 1,
+					// 	json_field: 'USD',
+					// 	request_type: 0,
+					// 	endpoint:
+					// 		'https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD,CAD' }
 							
-					]
+					// ]
 
 					// const apis = [{
 					// 	parameters: '{}',
@@ -135,9 +135,10 @@ class ObjectActionHandler extends AbstractActionHandler {
 
 					// const response_type = payload.data.response_type;					
 					// const aggregation_type = payload.data.aggregation_type;
-					const aggregation_type = 1 	 // 0,1,3,4,5,8
-					const response_type =  2 ; //1,2
-
+					// const aggregation_type = 1 	 // 0,1,3,4,5,8
+					// const response_type =  2 ; //1,2
+					const aggregation_type = aggregation_type 	 // 0,1,3,4,5,8
+					const response_type =  response_type ; //1,2
 					// const response_type =  0; //0
 					// const aggregation_type = 2 // 2, 6,7 ,9
 
