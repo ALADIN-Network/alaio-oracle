@@ -11,7 +11,7 @@
 
 namespace alaio {
 
-   static constexpr alaio::name oracle_account    = "12decoracle"_n;
+   static constexpr alaio::name oracle_account    = "alaio"_n;
    static_assert(oracle_account, "oracle_account is empty. Please provide valid oracle account name");
 
    static constexpr alaio::name active_permission = "active"_n;
@@ -33,8 +33,12 @@ namespace alaio {
    private:
       struct api {
          std::string endpoint;
+         uint16_t request_type;
+         uint16_t response_type;
+         std::string parameters;
          std::string json_field;
       };
+
 
       /*
        * This is table to store pending requests
@@ -73,7 +77,7 @@ namespace alaio {
       typedef alaio::singleton< "config"_n, configuration > configuration_singleton;
 
 
-      void make_request( uint64_t request_id, const std::vector<api>& apis, uint16_t response_type, uint16_t aggregation_type );
+      void make_request( uint64_t request_id, const std::vector<api>& apis, uint16_t response_type, uint16_t aggregation_type, uint16_t prefered_api, std::string string_to_count  );
       void make_transfer( const alaio::name& receiver, const alaio::asset& amount );
 
       template<typename Iterator>

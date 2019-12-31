@@ -82,7 +82,7 @@ namespace alaio {
          _config.next_request_id++;
       }
 
-      make_request(request_id, std::vector<api>{ {.endpoint="https://min-api.cryptocompare.com/data/price?fsym=ALA&tsyms=BTC", .json_field="BTC"} }, 2, 0);
+      make_request(request_id, std::vector<api>{ {.endpoint="https://min-api.cryptocompare.com/data/price?fsym=ALA&tsyms=BTC", .json_field="BTC"} }, 2, 0, 0, "qwerty");
 
       _deposits.emplace( get_self(), [&]( auto& d ) {
          d.id          = request_id;
@@ -95,13 +95,13 @@ namespace alaio {
    /*
     * This function sends inline action to oracle contract
     */
-   void client::make_request( uint64_t request_id, const std::vector<api>& apis, uint16_t response_type, uint16_t aggregation_type )
+   void client::make_request( uint64_t request_id, const std::vector<api>& apis, uint16_t response_type, uint16_t aggregation_type, uint16_t prefered_api, std::string string_to_count )
    {
       action(
          permission_level{ get_self(), active_permission },
          oracle_account,
          request_action,
-         std::make_tuple(request_id, get_self(), apis, response_type, aggregation_type)
+         std::make_tuple(request_id, get_self(), apis, response_type, aggregation_type, prefered_api, string_to_count)
       ).send();
    }
 

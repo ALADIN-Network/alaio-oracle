@@ -1,9 +1,9 @@
 {
-  "private_key": "5JQViprJNC4bZ4TjRAcocArDwusxPdVXP3em1oN7VFhZSyXKFJW",
+  "private_key": "5KBcx7MXkDb6kfj38JoUSR7Hs7Ynsyfvii4ET7tLCkLYrK5kGP5",
   "ala_data": {
       "endpoint": "http://3.14.68.213:8888",
-      "oracle_contract_name": "oracle",
-      "oracle_account": "hansoracle"
+      "oracle_contract_name": "alaio",
+      "oracle_account": "alaio"
   },
   "mongo": {
       "historyDBName": "ALA",

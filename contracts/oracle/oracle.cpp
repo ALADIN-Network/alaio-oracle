@@ -23,18 +23,18 @@ namespace alaio {
    void oracle::addrequest( uint64_t request_id, const alaio::name& caller, const std::vector<api>& apis, uint16_t response_type, uint16_t aggregation_type )
    {
       require_auth( caller );
-      check(aggregation_type > 10 || aggregation_type < 0, "Aggregation type or response type out of range " )
-      check(response_type > 3 || response_type < 0, "Aggregation type or response type out of range " )
-      check(aggregation_type == 0 && ( response_type == 0 || response_type == 3)  , "Aggregation type or response type out of range ")
-      check(aggregation_type == 1 && ( response_type == 0 || response_type == 3)  , "Aggregation type or response type out of range ")
-      check(aggregation_type == 2 && ( response_type == 1 || response_type == 2 || response_type == 3)  , "Aggregation type or response type out of range ")
-      check(aggregation_type == 3 && ( response_type == 0 || response_type == 3)  , "Aggregation type or response type out of range ")
-      check(aggregation_type == 4 && ( response_type == 0 || response_type == 3)  , "Aggregation type or response type out of range ")
-      check(aggregation_type == 5 && ( response_type == 0 || response_type == 3)  , "Aggregation type or response type out of range ")
-      check(aggregation_type == 8 && ( response_type == 0 || response_type == 3)  , "Aggregation type or response type out of range ")
-      check(aggregation_type == 10 && ( response_type == 0 || response_type == 1 || response_type == 2)  , "Aggregation type or response type out of range ")
+    //  check(aggregation_type > 10 || aggregation_type < 0, "Aggregation type or response type out of range " );
+     // check(response_type > 3 || response_type < 0, "Aggregation type or response type out of range " );
+     // check(aggregation_type == 0 && ( response_type == 0 || response_type == 3)  , "Aggregation type or response type out of range ");
+     // check(aggregation_type == 1 && ( response_type == 0 || response_type == 3)  , "Aggregation type or response type out of range ");
+     // check(aggregation_type == 2 && ( response_type == 1 || response_type == 2 || response_type == 3)  , "Aggregation type or response type out of range ");
+     // check(aggregation_type == 3 && ( response_type == 0 || response_type == 3)  , "Aggregation type or response type out of range ");
+     // check(aggregation_type == 4 && ( response_type == 0 || response_type == 3)  , "Aggregation type or response type out of range ");
+     // check(aggregation_type == 5 && ( response_type == 0 || response_type == 3)  , "Aggregation type or response type out of range ");
+     // check(aggregation_type == 8 && ( response_type == 0 || response_type == 3)  , "Aggregation type or response type out of range ");
+     // check(aggregation_type == 10 && ( response_type == 0 || response_type == 1 || response_type == 2)  , "Aggregation type or response type out of range ");
 
-      check( apis.size() <= max_api_count, "number of endpoints is too large" );
+     // check( apis.size() <= max_api_count, "number of endpoints is too large" );
       for (const auto& api: apis) {
          check( api.endpoint.substr(0, 5) == std::string("https"), "invalid endpoint" );
          check( !api.json_field.empty(), "empty json field" );
@@ -51,6 +51,8 @@ namespace alaio {
       idx.modify(it, same_payer, [](auto& o) {
          o.pending_requests++;
       });
+      print("assigned oracle",assigned_oracle);
+      print("standby_oracle",standby_oracle);
 
       requests.emplace( caller, [&, assigned=assigned_oracle, standby=standby_oracle]( auto& r ) {
          r.id               = request_id;
