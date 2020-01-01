@@ -11,8 +11,8 @@ module.exports = function (mongooseClient) {
 				parameter : {type: String},
 				response : {type: String}
 			}],
-			response_type : {type : Number},
-			aggregation_type : {type : Number},
+			response_type : {type : String},
+			aggregation_type : {type : String},
 			oracle_account : {type: String},
 			aggregated_response : {type : String}
 		},

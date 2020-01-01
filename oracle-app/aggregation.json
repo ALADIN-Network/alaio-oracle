@@ -1,0 +1,13 @@
+{
+    "0" : "Mean",
+    "1" : "Standard Deviation",
+    "2" : "Boolean",
+    "3" : "Max",
+    "4" : "Min",
+    "5" : "Sum",
+    "6" : "First",
+    "7" : "Last",
+    "8" : "Median",
+    "9" : "Mode",
+    "10": "Count"
+}
