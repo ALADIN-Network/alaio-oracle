@@ -99,45 +99,27 @@ function aggregate(data, aggregation_type, string_to_count) {
 
     }
     else if (aggregation_type == 3 ){
-        console.log("handata ",data);
         return Math.max(...data);
     }
     else if (aggregation_type == 4 ){
-        console.log("handata ",data);
         return Math.min(...data);
     }
     else if (aggregation_type == 5 ){
-        console.log("handata ",data);
         for (i = 0; i<len; i++) {
             sum += data[i];
         }
-        console.log("hansum ",sum);
         return sum;
     }
     else if (aggregation_type == 6 ){
-        console.log("handata ",data);
         return data[0];
     }
     else if (aggregation_type == 7 ){
-        console.log("handata ",data);
         return data[len-1];
     }
     else if (aggregation_type == 8 ){
-        // console.log("handata ",data);
 
         return stats.median(data);
-        // if(len%2===0)
-        // {
-        //     var median = ((data[len/2])+(data[(len/2)-1]))/2;
-        //     console.log("median: ",median);
-        //     return median;
-        // }
-        // else
-        // {
-        //     var median = data[(len-1)/2];
-        //     console.log("median: ",median);
-        //     return median;
-        // }
+        
     }
     else if (aggregation_type == 9 ){
         console.log("handata ",data);
@@ -177,5 +159,22 @@ function aggregate(data, aggregation_type, string_to_count) {
     else return null
 }
 
+// function mean (data, aggregation_type, string_to_count){
 
+// }
+// function sd (data, aggregation_type, string_to_count){
+    
+// }
+// function boolean (data, aggregation_type, string_to_count){
+    
+// }
+// function sum (data, aggregation_type, string_to_count){
+    
+// }
+// function mode (data, aggregation_type, string_to_count){
+    
+// }
+// function count (data, aggregation_type, string_to_count){
+    
+// }
 module.exports = aggregate;

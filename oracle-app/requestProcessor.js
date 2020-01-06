@@ -141,13 +141,11 @@ class RequestProcessor {
 					result = await this.getResult(api, api.endpoint, api.json_field, response_type);
 					console.log("request processor, inside processReq result :", result)
 					
-					// await timeoutPromise(100);
 					if (result !== null) {
 						api["response"] = result;
 						api["api"] = api['endpoint'];
 						delete api['endpoint'];
 						api_response_set.push(api);
-						console.log("api_response_set", api_response_set)
 						results.push(result);
 					}
 						
@@ -165,24 +163,12 @@ class RequestProcessor {
 		var confirmed_response = results.filter((value,index,arr)=>{
 			return value!=undefined
 		})
-		// var undefined_or_null = 0;
-		// for(var r in results)
-		// {
-		// 	if(results[r]===null || results[r]===undefined)
-		// 	{
-		// 		undefined_or_null++;
-		// 	}
-		// }
-		//console.log("undefined_or_null: ",undefined_or_null);
-
-		
-		//prefered_api=undefined
+	
 		
 		console.log("request processor, inside processReq confirmed_response.length :", confirmed_response.length)
 		console.log("request processor, inside processReq apis.length/2  :", apis.length/2)
 		console.log("request processor, inside processReq confirmed_response.length>=apis.length/2  :", (confirmed_response.length>=apis.length/2) )
 		console.log("request processor, inside processReq results[prefered_api] :", results[prefered_api])
-
 
 
 		if(confirmed_response.length>=apis.length/2 && !prefered_api)
@@ -205,26 +191,6 @@ class RequestProcessor {
 		{
 			result = aggregate (confirmed_response, aggregation_type, string_to_count)
 		}
-		// console.log("result: ",result);
-		//result = aggregate (results, aggregation_type)
-
-		// if (options.ala_data.oracle_account == assigned_oracle){
-		// 	console.log("request processor, inside processReq inside if for the aggregated response  :", result)
-
-		// 	// context.mongo.model('audit_trail').update({request_id: id}, {$set: {aggregated_response: result}}).then(function (userDataa) {
-		// 	// 	console.error('Added aggregation response to audit trail', userDataa);
-		// 	// });
-		// 	result = result.toString()
-		// 	context.mongo.model('audit_trail').update({request_id: id}, {$set: {aggregated_response: result}}).catch(error => {
-		// 		console.error('Failed to insert response to mongo2222: ', error);
-		// 	});
-		// }
-
-		// async audit_trail (id, caller, api, response_type, aggregation_type, result, aggregated_response, context,  options, assigned_oracle, standby_oracle){
-
-		// var responsee = await this.audit_trail(id, caller, api, response_type, aggregation_type, "", result, context,  options, assigned_oracle );
-
-
 		
 		var encoded = "";
 		try {
@@ -252,7 +218,7 @@ class RequestProcessor {
 	async getResult(set, endpoint, json_field, response_type) {
 		
 		//if(set.request_type===0){
-			var res = await this.makeRequest(endpoint, json_field);
+		var res = await this.makeRequest(endpoint, json_field);
 		//}
 		// else{
 		// 	var res = await this.makePostRequest(set, set.parameters);	
@@ -295,33 +261,33 @@ class RequestProcessor {
 	}
 
 
-	async makePostRequest(item, parameters) {
+	// async makePostRequest(item, parameters) {
 
-		const options = {
-			url: item.api_endpoint,
-			method: 'POST',
-			headers: {
-			  'Accept': 'application/json',
-			  'content-type' : 'application/raw',
-			  'User-Agent': 'aladin-oracle'
-			},
-			timeout: 250,
-			json: parameters
-		};
+	// 	const options = {
+	// 		url: item.api_endpoint,
+	// 		method: 'POST',
+	// 		headers: {
+	// 		  'Accept': 'application/json',
+	// 		  'content-type' : 'application/raw',
+	// 		  'User-Agent': 'aladin-oracle'
+	// 		},
+	// 		timeout: 250,
+	// 		json: parameters
+	// 	};
 
-		await request(options, (err, res, body) => {  
-			// console.log("ressssssssssssssss", res)
-			if (res && res.statusCode == 200) {
-				body = JSON.parse(body);
-			  	console.log("body after", typeof body)
-				return getValueFromJson(json, json_field);		
+	// 	await request(options, (err, res, body) => {  
+	// 		// console.log("ressssssssssssssss", res)
+	// 		if (res && res.statusCode == 200) {
+	// 			body = JSON.parse(body);
+	// 		  	console.log("body after", typeof body)
+	// 			return getValueFromJson(json, json_field);		
 
-			}
-			else {
-			   return null
-			}
-		})
-	}
+	// 		}
+	// 		else {
+	// 		   return null
+	// 		}
+	// 	})
+	// }
 
 }
 
