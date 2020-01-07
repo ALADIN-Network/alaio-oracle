@@ -52,7 +52,9 @@ async function run(mongoose, skip_missed) {
 		mongoEndpoint: config.mongo.endpoint,    // mongoEndpoint: the url of the mongodb instance
 	});
 	const actionHandler = new ObjectActionHandler(config, mongoose, state)
+	console.log("inside index.js before calling resendresponses()", )
 	actionHandler.resendResponses();
+	console.log("inside index.js before calling sendTimedOut()", )
 	actionHandler.sendTimedOut();
 	const actionWatcher = new BaseActionWatcher(actionReader, actionHandler, 250);
 	try {
