@@ -4,6 +4,7 @@
 
 const fetch = require('node-fetch');
 var async = require("async");
+var jp = require('jsonpath');
 
 const ResponseTypes = require('./responseType');
 const encode = require('./encoding');
@@ -62,17 +63,26 @@ function checkType(value, response_type) {
  * To parse value 1 from given json response client must provide following path: "foo\nbar"
  */
 function getValueFromJson(json, path) {
-	const pathArr = path.split('\n');
-	console.log("fetched json is: ".json);
-	console.log("json path is: ",path);
-	var value = json;
-	for (var i = 0; i < pathArr.length; i++) {
-		value = value[pathArr[i]];
-		if (value === undefined) {
-			return null;
-		}
-	}
-	return value;
+
+	console.log("inside getValueFromJson, json", json)
+	console.log("inside getValueFromJson, path", path)
+	var needed_field = jp.query(json, '$.' + path)
+	console.log("inside getvaluefromjson, needed_field", needed_field);
+	console.log("inside getvaluefromjson needed_field[0]", needed_field[0]);
+	return needed_field[0];
+
+	// const pathArr = path.split('\n');
+	// console.log("fetched json is: ".json);
+	// console.log("json path is: ",path);
+	// var value = json;
+	// for (var i = 0; i < pathArr.length; i++) {
+	// 	value = value[pathArr[i]];
+	// 	if (value === undefined) {
+	// 		return null;
+	// 	}
+	// }
+	// return value;
+
 }
 
 

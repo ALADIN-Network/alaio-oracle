@@ -42,7 +42,7 @@ function aggregate(data, aggregation_type, string_to_count) {
         console.log("normal values are between :", mean+sd, "and ",mean-sd)
         for (i = 0; i<len; i++) {
             if(typeof data[i] === 'number'){
-                if((data[i] < (mean + sd)) && (data[i] > (mean - sd))){
+                if((data[i] <= (mean + sd)) && (data[i] >= (mean - sd))){
                     console.log("normal data : ", data[i])
                     normal_data += data[i];
                     counter += 1;

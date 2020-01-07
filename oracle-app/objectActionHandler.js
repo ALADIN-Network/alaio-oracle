@@ -51,10 +51,10 @@ class ObjectActionHandler extends AbstractActionHandler {
 					// 		'https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD,CAD' },
 					// 		{ parameters: '{}',
 					// 	response_type: 1,
-					// 	json_field: 'USD',
+					// 	json_field: 'rates.INR',
 					// 	request_type: 0,
 					// 	endpoint:
-					// 		'https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD,CAD' }
+					// 		'https://api.exchangerate-api.com/v4/latest/USD' }
 							
 					// ]
 
