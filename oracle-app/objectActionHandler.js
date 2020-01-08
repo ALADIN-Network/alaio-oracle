@@ -3,8 +3,8 @@ const { AbstractActionHandler } = require("demux")
 const RequestProcessor = require('./requestProcessor');
 const ContractInteraction = require('./contractInteraction');
 
-const timeFrameMinutes = 5;
-
+const timeFrameMinutes = 1;
+const timeFrameSeconds = 20;
 
 class ObjectActionHandler extends AbstractActionHandler {
 	constructor(options, mongo, state) {
@@ -166,8 +166,11 @@ class ObjectActionHandler extends AbstractActionHandler {
 					console.log("inside objectActionHandler shifted timeshiftedTime.getTimezoneOffset()", shiftedTime.getTimezoneOffset())
 					console.log("inside objectActionHandler shifted time.getMinutes()", shiftedTime.getMinutes())
 					console.log("inside objectActionHandler shifted time", shiftedTime.setMinutes(shiftedTime.getMinutes() - shiftedTime.getTimezoneOffset()))
-
+					
+					console.log("inside objectactionhandler shiftedtime()", shiftedTime);
 					shiftedTime.setMinutes(shiftedTime.getMinutes() - shiftedTime.getTimezoneOffset());
+					console.log("inside objectactionhandler shiftedtime()", shiftedTime);
+					
 					// Track all requests in mongo to delete them after time is up
 					context.mongo.model('pending_request').create({ caller: caller, id: request_id, creation_time: shiftedTime }).catch(error => {
 						console.error('Failed to insert request to mongo: ', error);
@@ -202,7 +205,9 @@ class ObjectActionHandler extends AbstractActionHandler {
 					}
 					else if (options.ala_data.oracle_account == standby_oracle) {
 						var targetDate = new Date(shiftedTime);
-						targetDate.setMinutes(targetDate.getMinutes() + timeFrameMinutes);
+						// targetDate.setMinutes(targetDate.getMinutes() + timeFrameMinutes);
+						targetDate.setSeconds(targetDate.getSeconds() + timeFrameSeconds);
+
 						context.mongo.model('request_response').create({
 							caller: caller,
 							id: request_id,
@@ -294,9 +299,10 @@ class ObjectActionHandler extends AbstractActionHandler {
 					console.log("inside resendresponses() d.valueOf()", d.valueOf())
 					console.log("inside resendresponses() record.creation_time.valueOf()", record.creation_time.valueOf())
 					console.log("inside resendresponses() d.valueOf() === record.creation_time.valueOf()", d.valueOf() === record.creation_time.valueOf())
+					
 					if (d.valueOf() === record.creation_time.valueOf()) {
 						try {
-							console.log("inside resend responses inside ttryyyyys")
+							console.log("inside resend responses inside ttryyyyys");
 							await this.contractInteraction.reply(record.caller, record.id, (record.response) ? record.response : "");
 							await request_response.deleteOne({ caller: record.caller, id: record.id }).exec();
 						} catch (e) {
@@ -322,17 +328,23 @@ class ObjectActionHandler extends AbstractActionHandler {
 		console.log("inside sendtimeout - pending requests")
 		const pending_request = this.mongo.model('pending_request');
 		var date = new Date();
-		date.setMinutes(date.getMinutes() - timeFrameMinutes * 2);
+		console.log("inside sendtimeout date", date)
+		// date.setMinutes(date.getMinutes() - timeFrameMinutes * 2);
+		date.setSeconds(date.getSeconds() + timeFrameSeconds);
+
+		console.log("inside sendTimedOut, date.setMinutes(date.getMinutes() - timeFrameMinutes * 2)",date.setMinutes(date.getMinutes() - timeFrameMinutes * 2) )
 		try {
 			const requests = await pending_request.find({ "creation_time": {$lte: date} }).exec();
 			for (var i = 0; i < requests.length; i++) {
 				const record = requests[i];
 				const rpc_response = await this.contractInteraction.getRequestById(record.caller, record.id);
+				console.log("inside sendtimeout rpc_responserpc_response", rpc_response)
+				console.log("inside sendtimeout rpc_response.rows.length === 0", rpc_response.rows.length === 0)
 				if (rpc_response.rows.length === 0) {
 					await pending_request.deleteOne({ caller: record.caller, id: record.id }).exec();
 				}
 				else {
-					console.log("inside sendTimeout rpc_response.rows[0].time")
+					console.log("inside sendTimeout rpc_response.rows[0].time");
 					var d = new Date(rpc_response.rows[0].time);
 					console.log("inside sendTimeOut, d", d);
 					console.log("inside sendTimeOut d.getTimezoneOffset()",d.getTimezoneOffset())
@@ -340,8 +352,8 @@ class ObjectActionHandler extends AbstractActionHandler {
 					console.log("inside sendTimeOut d", d.setMinutes(d.getMinutes() - d.getTimezoneOffset()))
 
 					d.setMinutes(d.getMinutes() - d.getTimezoneOffset()); //this is workaround because alaiojs parses time_point in Date object with wrong timezone
-					console.log("inside sendTimeOut d.getMinutes()", d.getMinutes())
-
+					console.log("inside sendTimeOut d.valueof", d.valueOf())
+					console.log("inside sendtimeout, record.creation_time.valueOf()", record.creation_time.valueOf())
 					if (d.valueOf() === record.creation_time.valueOf()) {
 						try {
 							await this.contractInteraction.reply(record.caller, record.id, "");
