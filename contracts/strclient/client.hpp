@@ -14,6 +14,8 @@ namespace alaio {
    static constexpr alaio::name active_permission = "active"_n;
    static constexpr alaio::name request_action    = "addrequest"_n;
    static constexpr alaio::name reply_action      = "reply"_n;
+   static constexpr alaio::name contract_name     = "myclient"_n;
+   static constexpr alaio::name action_name       = "addreq"_n;
 
    class [[alaio::contract]] client : public contract {
 
@@ -25,7 +27,7 @@ namespace alaio {
 
       struct [[alaio::table]] btc_balances {
          uint64_t id;
-         double amount;
+         std::string amount;
 
          uint64_t primary_key() const { return id; }
       };

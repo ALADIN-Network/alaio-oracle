@@ -44,7 +44,7 @@ function checkType(value, response_type) {
 		}
 	}
 	else if (response_type == ResponseTypes.String) {
-		if (typeof value === 'string' && value.length <= 127) {
+		if (typeof value === 'string'&& value.length <= 127 || typeof value === 'number' ) {
 			console.log("string")
 			return value;
 		}
@@ -181,7 +181,7 @@ class RequestProcessor {
 		console.log("request processor, inside processReq results[prefered_api] :", results[prefered_api])
 
 
-		if(confirmed_response.length>=apis.length/2 && !prefered_api)
+		if(confirmed_response.length>=apis.length/2 )
 		{
 			result = aggregate (confirmed_response, aggregation_type, string_to_count)
 		}
