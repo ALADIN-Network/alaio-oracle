@@ -106,10 +106,11 @@ class RequestProcessor {
      * or error was encountered during request processing api will be considered as failed
      */
 
-	async audit_trail (id, caller, api, response_type, aggregation_type,  aggregated_response, context,  options, assigned_oracle){
+	async audit_trail (id, caller, api, response_type, aggregation_type,  aggregated_response, context,  options, assigned_oracle, standby_oracle){
 
 		console.log("request processor, inside audit_trail  :", options.ala_data.oracle_account)
 		console.log("request processor, inside audit_trail  :", assigned_oracle)
+		console.log("request processor, inside audit_trail  :", standby_oracle)
 		console.log("request processor, inside audit_trail  :", (options.ala_data.oracle_contract_name == assigned_oracle))
 
 
@@ -119,26 +120,30 @@ class RequestProcessor {
 		response_type = responseJson[response_type]; 
 		aggregation_type = aggregationJson[aggregation_type]; 
 
-		if (options.ala_data.oracle_account == assigned_oracle){
+		if (options.ala_data.oracle_account == assigned_oracle || options.ala_data.oracle_account == standby_oracle){
 
-			context.mongo.model('audit_trail').create({ 
-				caller: caller, 
-				request_id: id, 
-				time: moment().format('YYYY-MM-DD hh:mm:ss'),
-				api_set : api,
-				response_type : response_type,
-				aggregation_type : aggregation_type,
-				oracle_account : assigned_oracle, 
-				aggregated_response: aggregated_response
-			
-			}).catch(error => {
-				console.error('Failed to insert response to mongo3: ', error);
-			});
-
+			context.mongo.model('audit_trail').findOne({request_id: id}).then(function (userDataa) {
+				console.log("Moment of truth", userDataa)
+				if(userDataa == null){
+					context.mongo.model('audit_trail').create({ 
+						caller: caller, 
+						request_id: id, 
+						time: moment().format('YYYY-MM-DD hh:mm:ss'),
+						api_set : api,
+						response_type : response_type,
+						aggregation_type : aggregation_type,
+						oracle_account : assigned_oracle, 
+						aggregated_response: aggregated_response
+					
+					}).catch(error => {
+						console.error('Failed to insert response to mongo3: ', error);
+					});
+				}
+			})		
 		}
 		
 	}
-	async processRequest(id, caller, apis, response_type, aggregation_type, context, prefered_api, string_to_count, options, assigned_oracle) {
+	async processRequest(id, caller, apis, response_type, aggregation_type, context, prefered_api, string_to_count, options, assigned_oracle, standby_oracle) {
 
 		
 		var results = [];
@@ -215,7 +220,7 @@ class RequestProcessor {
 		console.log("apaiaapapiapiaiapaipapapia", api_response_set)
 		console.log("apaiaapapiapiaiapaipapapia", result)
 
-		await this.audit_trail(id, caller, api_response_set, response_type, aggregation_type, result, context,  options, assigned_oracle );
+		await this.audit_trail(id, caller, api_response_set, response_type, aggregation_type, result, context,  options, assigned_oracle, standby_oracle );
 
 
 		return encoded;
