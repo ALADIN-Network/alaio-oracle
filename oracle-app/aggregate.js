@@ -87,7 +87,7 @@ function aggregate(data, aggregation_type, string_to_count) {
         if(count_a===count_b)
         {
             console.log("Equal Positive and Negative responses, returning :", arr[1])
-            return 0;
+            return 2;
         }else if(count_a>count_b)
         {
             console.log("Unequal Positive and Negative responses")
@@ -140,7 +140,9 @@ function aggregate(data, aggregation_type, string_to_count) {
                 }
             }
         console.log("mode arr: ",modes);
-        return modes[0];
+        modes.sort();
+        console.log("modessssssssssss", modes);
+        return modes[(modes.length-1)];
     }
     else if (aggregation_type == 10 ){
         console.log("string data: ",data);
