@@ -3,12 +3,15 @@
  */
 
 const fetch = require('node-fetch');
+var async = require("async");
+var jp = require('jsonpath');
 
 const ResponseTypes = require('./responseType');
 const encode = require('./encoding');
 const aggregate = require ('./aggregate')
 var moment = require('moment')
-
+var responseJson = require('./response.json')
+var aggregationJson = require('./aggregation.json')
 /*
  * Checks if value has expected type and return it
  * Otherwise return null
@@ -41,7 +44,7 @@ function checkType(value, response_type) {
 		}
 	}
 	else if (response_type == ResponseTypes.String) {
-		if (typeof value === 'string' && value.length <= 127) {
+		if (typeof value === 'string'&& value.length <= 127 || typeof value === 'number' ) {
 			console.log("string")
 			return value;
 		}
@@ -60,17 +63,26 @@ function checkType(value, response_type) {
  * To parse value 1 from given json response client must provide following path: "foo\nbar"
  */
 function getValueFromJson(json, path) {
-	const pathArr = path.split('\n');
-	console.log("fetched json is: ".json);
-	console.log("json path is: ",path);
-	var value = json;
-	for (var i = 0; i < pathArr.length; i++) {
-		value = value[pathArr[i]];
-		if (value === undefined) {
-			return null;
-		}
-	}
-	return value;
+
+	console.log("inside getValueFromJson, json", json)
+	console.log("inside getValueFromJson, path", path)
+	var needed_field = jp.query(json, '$.' + path)
+	console.log("inside getvaluefromjson, needed_field", needed_field);
+	console.log("inside getvaluefromjson needed_field[0]", needed_field[0]);
+	return needed_field[0];
+
+	// const pathArr = path.split('\n');
+	// console.log("fetched json is: ".json);
+	// console.log("json path is: ",path);
+	// var value = json;
+	// for (var i = 0; i < pathArr.length; i++) {
+	// 	value = value[pathArr[i]];
+	// 	if (value === undefined) {
+	// 		return null;
+	// 	}
+	// }
+	// return value;
+
 }
 
 
@@ -94,83 +106,48 @@ class RequestProcessor {
      * or error was encountered during request processing api will be considered as failed
      */
 
-	async audit_trail (id, caller, api, response_type, aggregation_type, result, aggregated_response, context,  options, assigned_oracle, standby_oracle){
+	async audit_trail (id, caller, api, response_type, aggregation_type,  aggregated_response, context,  options, assigned_oracle, standby_oracle){
 
-		// console.log("moment().format('YYYY-MM-DD hh:mm:ss')",moment().format('YYYY-MM-DD hh:mm:ss'))
 		console.log("request processor, inside audit_trail  :", options.ala_data.oracle_account)
 		console.log("request processor, inside audit_trail  :", assigned_oracle)
+		console.log("request processor, inside audit_trail  :", standby_oracle)
 		console.log("request processor, inside audit_trail  :", (options.ala_data.oracle_contract_name == assigned_oracle))
 
-		if (options.ala_data.oracle_account == assigned_oracle){
-			var data = {
-				caller: caller, 
-				request_id: id, 
-				time: moment().format('YYYY-MM-DD hh:mm:ss'),
-				api_set : {
-					api : api.endpoint,
-					request_type : api.request_type,
-					json_field : api.json_field,							
-					parameter : api.parameter,
-					response : result
-				},
-				response_type : response_type,
-				aggregation_type : aggregation_type,
-				oracle_account : assigned_oracle, 
-				standby_oracle_account: standby_oracle,
-				aggregated_response: aggregated_response
-			}
-			// console.log("datadatdatadtadta",data)
-			var update_api_set = {
-				api : api.endpoint,
-				request_type : api.request_type,
-				json_field : api.json_field,							
-				parameter : api.parameter,
-				response : result
-			}
-		
-		
-			context.mongo.model('audit_trail').findOne({request_id: id}).then(function (userDataa) {
-				// console.log("userDatauserData", userDataa)
-				console.log("request processor, inside audit_trail  checking if model is created:",  userDataa == null)
 
+		response_type = "" + response_type; 
+		aggregation_type = "" + aggregation_type; 
+
+		response_type = responseJson[response_type]; 
+		aggregation_type = aggregationJson[aggregation_type]; 
+
+		if (options.ala_data.oracle_account == assigned_oracle || options.ala_data.oracle_account == standby_oracle){
+
+			context.mongo.model('audit_trail').findOne({request_id: id}).then(function (userDataa) {
+				console.log("Moment of truth", userDataa)
 				if(userDataa == null){
-					// console.log("inside if audit_trail......")
-					// console.log("data is insane", data)
 					context.mongo.model('audit_trail').create({ 
 						caller: caller, 
 						request_id: id, 
 						time: moment().format('YYYY-MM-DD hh:mm:ss'),
-						api_set : {
-							api : api.endpoint,
-							request_type : api.request_type,
-							json_field : api.json_field,							
-							parameter : api.parameter,
-							response : result
-						},
+						api_set : api,
 						response_type : response_type,
 						aggregation_type : aggregation_type,
 						oracle_account : assigned_oracle, 
-						standby_oracle_account : standby_oracle,
 						aggregated_response: aggregated_response
 					
 					}).catch(error => {
 						console.error('Failed to insert response to mongo3: ', error);
 					});
 				}
-				else{
-					// console.log("inside else audit_trail......")
-					context.mongo.model('audit_trail').update({request_id: id}, {$push: {api_set: update_api_set}}).catch(error => {
-						console.error('Failed to insert response to mongo2: ', error);
-					});
-				}
-			})
+			})		
 		}
 		
 	}
-	async processRequest(id, caller, apis, response_type, aggregation_type, context, prefered_api, string_to_count, options, assigned_oracle) {
+	async processRequest(id, caller, apis, response_type, aggregation_type, context, prefered_api, string_to_count, options, assigned_oracle, standby_oracle) {
 
 		
 		var results = [];
+		var api_response_set = [];
 		for (var api of apis) {
 			// console.log(api);
 			var result = null;
@@ -178,9 +155,12 @@ class RequestProcessor {
 				try {
 					result = await this.getResult(api, api.endpoint, api.json_field, response_type);
 					console.log("request processor, inside processReq result :", result)
-					var responsee = await this.audit_trail(id, caller, api, response_type, aggregation_type, result, "", context,  options, assigned_oracle );
+					
 					if (result !== null) {
-						// console.log("before pushing into results, result : ",result);
+						api["response"] = result;
+						api["api"] = api['endpoint'];
+						delete api['endpoint'];
+						api_response_set.push(api);
 						results.push(result);
 					}
 						
@@ -193,21 +173,12 @@ class RequestProcessor {
 				console.log('Skipping request to localhost.');
 			}
 		}
+
+
 		var confirmed_response = results.filter((value,index,arr)=>{
 			return value!=undefined
 		})
-		// var undefined_or_null = 0;
-		// for(var r in results)
-		// {
-		// 	if(results[r]===null || results[r]===undefined)
-		// 	{
-		// 		undefined_or_null++;
-		// 	}
-		// }
-		//console.log("undefined_or_null: ",undefined_or_null);
-
-		
-		//prefered_api=undefined
+	
 		
 		console.log("request processor, inside processReq confirmed_response.length :", confirmed_response.length)
 		console.log("request processor, inside processReq apis.length/2  :", apis.length/2)
@@ -215,8 +186,7 @@ class RequestProcessor {
 		console.log("request processor, inside processReq results[prefered_api] :", results[prefered_api])
 
 
-
-		if(confirmed_response.length>=apis.length/2 && !prefered_api)
+		if(confirmed_response.length>=apis.length/2 )
 		{
 			result = aggregate (confirmed_response, aggregation_type, string_to_count)
 		}
@@ -236,15 +206,7 @@ class RequestProcessor {
 		{
 			result = aggregate (confirmed_response, aggregation_type, string_to_count)
 		}
-		// console.log("result: ",result);
-		//result = aggregate (results, aggregation_type)
-
-		if (options.ala_data.oracle_account == assigned_oracle){
-
-			context.mongo.model('audit_trail').update({request_id: id}, {$set: {aggregated_response: result}}).then(function (userDataa) {
-				console.error('Added aggregation response to audit trail', userDataa);
-			});
-		}
+		
 		var encoded = "";
 		try {
 			console.log("request processor, inside processReq before encodeing aggregation  :", result)
@@ -255,6 +217,12 @@ class RequestProcessor {
 		}
 	
 		console.log("request processor, inside processReq encoded :", encoded)
+		console.log("apaiaapapiapiaiapaipapapia", api_response_set)
+		console.log("apaiaapapiapiaiapaipapapia", result)
+
+		await this.audit_trail(id, caller, api_response_set, response_type, aggregation_type, result, context,  options, assigned_oracle, standby_oracle );
+
+
 		return encoded;
 	}
 
@@ -265,7 +233,7 @@ class RequestProcessor {
 	async getResult(set, endpoint, json_field, response_type) {
 		
 		//if(set.request_type===0){
-			var res = await this.makeRequest(endpoint, json_field);
+		var res = await this.makeRequest(endpoint, json_field);
 		//}
 		// else{
 		// 	var res = await this.makePostRequest(set, set.parameters);	
@@ -308,33 +276,33 @@ class RequestProcessor {
 	}
 
 
-	async makePostRequest(item, parameters) {
+	// async makePostRequest(item, parameters) {
 
-		const options = {
-			url: item.api_endpoint,
-			method: 'POST',
-			headers: {
-			  'Accept': 'application/json',
-			  'content-type' : 'application/raw',
-			  'User-Agent': 'aladin-oracle'
-			},
-			timeout: 250,
-			json: parameters
-		};
+	// 	const options = {
+	// 		url: item.api_endpoint,
+	// 		method: 'POST',
+	// 		headers: {
+	// 		  'Accept': 'application/json',
+	// 		  'content-type' : 'application/raw',
+	// 		  'User-Agent': 'aladin-oracle'
+	// 		},
+	// 		timeout: 250,
+	// 		json: parameters
+	// 	};
 
-		await request(options, (err, res, body) => {  
-			// console.log("ressssssssssssssss", res)
-			if (res && res.statusCode == 200) {
-				body = JSON.parse(body);
-			  	console.log("body after", typeof body)
-				return getValueFromJson(json, json_field);		
+	// 	await request(options, (err, res, body) => {  
+	// 		// console.log("ressssssssssssssss", res)
+	// 		if (res && res.statusCode == 200) {
+	// 			body = JSON.parse(body);
+	// 		  	console.log("body after", typeof body)
+	// 			return getValueFromJson(json, json_field);		
 
-			}
-			else {
-			   return null
-			}
-		})
-	}
+	// 		}
+	// 		else {
+	// 		   return null
+	// 		}
+	// 	})
+	// }
 
 }
 
