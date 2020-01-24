@@ -1,5 +1,5 @@
 {
-    "____comment": "This file was generated with alaio-abigen. DO NOT EDIT Mon Jan  6 08:03:25 2020",
+    "____comment": "This file was generated with alaio-abigen. DO NOT EDIT Mon Jan  6 09:10:44 2020",
     "version": "alaio::abi/1.1",
     "structs": [
         {
@@ -52,7 +52,7 @@
                 },
                 {
                     "name": "amount",
-                    "type": "float64"
+                    "type": "string"
                 }
             ]
         },

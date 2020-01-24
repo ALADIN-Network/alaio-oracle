@@ -21,7 +21,7 @@ namespace alaio {
    {
       check( caller == get_self(), "received reply from another caller" ); 
 
-      const auto rate = unpack<double>(response);
+      const auto rate = unpack<int>(response);
 
       btc_balances_table balances( get_self(), get_self().value );
          balances.emplace( get_self(), [&]( auto& bal ) {
