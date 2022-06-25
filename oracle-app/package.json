@@ -19,7 +19,7 @@
     "mathjs": "^6.3.0",
     "moment": "^2.24.0",
     "mongoose": "^5.7.13",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^2.6.7",
     "stats-lite": "^2.2.0",
     "yargs": "^15.0.2"
   }
