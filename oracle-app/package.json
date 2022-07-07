@@ -17,7 +17,7 @@
     "demux-ala": "^4.0.2",
     "jsonpath": "^1.0.2",
     "mathjs": "^6.3.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "mongoose": "^5.7.13",
     "node-fetch": "^2.6.0",
     "stats-lite": "^2.2.0",
