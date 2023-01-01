@@ -12,7 +12,7 @@
   "dependencies": {
     "alaiojs": "^20.0.2",
     "async": "^3.1.0",
-    "config": "^3.2.4",
+    "config": "^3.3.8",
     "demux": "^4.0.0",
     "demux-ala": "^4.0.2",
     "jsonpath": "^1.0.2",
